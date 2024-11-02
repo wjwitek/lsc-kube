@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: copy-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: copy
+        image: alpine
+        command: ["cp", "./html", "./html-copy"]
+        volumeMounts:
+            - mountPath: "/usr/share/nginx"
+              name: data-volume
+      restartPolicy: Never
+      volumes:
+          - name: data-volume
+            persistentVolumeClaim:
+              claimName: test-dynamic-volume-claim
+  backoffLimit: 4
